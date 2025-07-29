@@ -1,0 +1,29 @@
+name: Random Pulse Commit
+
+on:
+  schedule:
+    - cron: "0 6 * * *"  # 6 AM UTC
+  workflow_dispatch:
+
+jobs:
+  pulse_commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Set Git User
+        run: |
+          git config --global user.name "nosense00-bot"
+          git config --global user.email "bot@users.noreply.github.com"
+
+      - name: Generate Random Commit Message
+        run: |
+          MESSAGES=("pulse: Pharos sync" "update: validator check" "chore: status refresh" "fix: minor test" "refactor: clean logs" "data: heartbeat ping")
+          MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
+          echo "$(date) - $MSG" >> pulse-log.txt
+          git add pulse-log.txt
+          git commit -m "$MSG" || echo "No changes to commit"
+
+      - name: Push Commit
+        run: git push origin main

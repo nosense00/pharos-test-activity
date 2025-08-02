@@ -25,7 +25,7 @@ jobs:
           MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
           echo "$(date) - $MSG" >> activity-log.txt
           git add activity-log.txt
-          git commit -m "$MSG" || echo "No changes to commit" || echo "No changes, skipping commit"
+          git commit -m "$MSG" || echo "No changes" || echo "No changes to commit" || echo "No changes, skipping commit"
 
       - name: Push Commit
         run: git push origin main

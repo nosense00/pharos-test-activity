@@ -2,30 +2,35 @@ name: Random Commit
 
 on:
   schedule:
-    - cron: "0 6 * * *"  # Every day at 6 AM UTC
+    - cron: "15 */8 * * *"
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   random_commit:
     runs-on: ubuntu-latest
     steps:
+      - name: Random Delay (0–300 seconds)
+        run: sleep $((RANDOM % 300))
+
       - name: Checkout Repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set Git User
         run: |
-    mkdir -p logs
           git config --global user.name "nosense00-bot"
           git config --global user.email "bot@users.noreply.github.com"
 
       - name: Generate Random Commit Message
         run: |
-    mkdir -p logs
-          MESSAGES=("chore: sync Pharos test" "update: log status" "fix: heartbeat patch" "docs: refresh logs" "test: workflow activity" "refactor: optimize commit")
+          mkdir -p logs
+          MESSAGES=("commit: Pharos sync" "update: light signal" "chore: commit refresh" "fix: beacon file" "refactor: data logs" "data: auto sync")
           MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
-          echo "$(date) - $MSG" >> activity-log.txt
-          git add activity-log.txt
-          git commit -m "$MSG" || echo "No changes" || echo "No changes to commit" || echo "No changes, skipping commit"
+          echo "$(date) - $MSG" >> logs/random-commit.txt
+          git add logs/random-commit.txt
+          git commit -m "$MSG" || echo "No changes to commit"
 
       - name: Push Commit
         run: git push origin main

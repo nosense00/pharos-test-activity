@@ -2,34 +2,28 @@ name: Random Pulse Commit
 
 on:
   schedule:
-    - cron: "30 */8 * * *"
+    - cron: "45 */12 * * *" # Every 12 hours UTC
   workflow_dispatch:
-
-permissions:
-  contents: write
 
 jobs:
   pulse_commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Random Delay (0–300 seconds)
-        run: sleep $((RANDOM % 300))
-
       - name: Checkout Repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
 
-      - name: Set Git User
+      - name: Setup Git Identity
         run: |
           git config --global user.name "nosense00-bot"
           git config --global user.email "bot@users.noreply.github.com"
 
-      - name: Generate Random Pulse Commit
+      - name: Pulse Update
         run: |
           mkdir -p logs
-          MESSAGES=("pulse: Pharos summon" "update: beacon ping" "chore: pulse refresh" "fix: beacon log" "refactor: pulse data" "data: sync pulse")
+          MESSAGES=("pulse: sync event" "pulse: activity refresh" "chore: pulse tick" "update: sync state")
           MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
-          echo "$(date) - $MSG" >> logs/random-pulse.txt
-          git add logs/random-pulse.txt
+          echo "$(date) - $MSG" >> logs/random-pulse.log
+          git add logs/random-pulse.log
           git commit -m "$MSG" || echo "No changes to commit"
 
       - name: Push Commit

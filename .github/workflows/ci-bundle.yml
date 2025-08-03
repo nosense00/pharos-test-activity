@@ -1,61 +1,41 @@
-# =========================
-# 1️⃣ Heartbeat Commit
-# =========================
-name: Heartbeat Commit
+name: CI Bundle
+
 on:
   schedule:
-    - cron: "0 18,2,10 * * *"   # 02:00, 10:00, 18:00 PH
+    - cron: "0 18,2,10 * * *"     # Heartbeat
+    - cron: "30 19,3,11 * * *"    # Random Commit
+    - cron: "0 21,5,13 * * *"     # Random Pulse
+    - cron: "15 22,6,14 * * *"    # CI Camouflage
+    - cron: "0 23,7,15 * * *"     # Test Results
+    - cron: "45 0,8,16 * * *"     # Lint
+    - cron: "30 1,9,17 * * *"     # Build
   workflow_dispatch:
+
 jobs:
+
   heartbeat:
+    name: Heartbeat Commit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: echo "💓 Heartbeat at $(date)"
 
-
-# =========================
-# 2️⃣ Random Commit
-# =========================
-name: Random Commit
-on:
-  schedule:
-    - cron: "30 19,3,11 * * *"  # 03:30, 11:30, 19:30 PH
-  workflow_dispatch:
-jobs:
-  random-commit:
+  random_commit:
+    name: Random Commit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: echo "🌀 Random commit at $(date)"
 
-
-# =========================
-# 3️⃣ Random Pulse Commit
-# =========================
-name: Random Pulse Commit
-on:
-  schedule:
-    - cron: "0 21,5,13 * * *"   # 05:00, 13:00, 21:00 PH
-  workflow_dispatch:
-jobs:
-  pulse:
+  random_pulse:
+    name: Random Pulse Commit
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: echo "⚡ Pulse triggered at $(date)"
 
-
-# =========================
-# 4️⃣ CI Camouflage
-# =========================
-name: CI Camouflage
-on:
-  schedule:
-    - cron: "15 22,6,14 * * *"  # 06:15, 14:15, 22:15 PH
-  workflow_dispatch:
-jobs:
-  build-test:
+  camouflage:
+    name: CI Camouflage
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -65,51 +45,25 @@ jobs:
       - run: echo "Setting up environment on ${{ matrix.os }}"
       - run: echo "✅ Dummy build passed"
 
-
-# =========================
-# 5️⃣ Test Results
-# =========================
-name: Test Results
-on:
-  schedule:
-    - cron: "0 23,7,15 * * *"   # 07:00, 15:00, 23:00 PH
-  workflow_dispatch:
-jobs:
-  test:
+  test_results:
+    name: Test Results
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: echo "🧪 Running tests..."
       - run: echo "✅ All tests passed successfully"
 
-
-# =========================
-# 6️⃣ CI Lint Check
-# =========================
-name: CI Lint Check
-on:
-  schedule:
-    - cron: "45 0,8,16 * * *"   # 08:45, 16:45 PH
-  workflow_dispatch:
-jobs:
-  lint:
+  lint_check:
+    name: CI Lint Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: echo "🔍 Lint check passed"
 
-
-# =========================
-# 7️⃣ CI Build Check
-# =========================
-name: CI Build Check
-on:
-  schedule:
-    - cron: "30 1,9,17 * * *"   # 09:30, 17:30 PH
-  workflow_dispatch:
-jobs:
-  build:
+  build_check:
+    name: CI Build Check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - run: echo "🏗️ Build completed successfully"
+

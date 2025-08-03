@@ -2,33 +2,20 @@ name: Random Commit
 
 on:
   schedule:
-    - cron: "15 */8 * * *"
+    - cron: "15 */8 * * *"  # Every 8 hours (offset 15 mins)
   workflow_dispatch:
 
-permissions:
-  contents: write
-
 jobs:
-  random_commit:
+  random-commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Random Delay (0–300 seconds)
-        run: sleep $((RANDOM % 300))
-
-      - name: Checkout Repo
-        uses: actions/checkout@v4
-
-      - name: Set Git User
-        run: |
-          git config --global user.name "nosense00-bot"
-          git config --global user.email "bot@users.noreply.github.com"
-      - name: Generate Random Commit Message
+      - uses: actions/checkout@v4
+      - name: Random Commit Simulation
         run: |
           mkdir -p logs
-          MESSAGES=("commit: Pharos sync" "update: light signal" "chore: commit refresh" "fix: beacon file" "refactor: data logs" "data: auto sync")
-          MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
-          echo "$(date) - $MSG" >> logs/random-commit.txt
-          git add logs/random-commit.txt
-          git commit -m "$MSG" || echo "No changes to commit"
-      - name: Push Commit
-        run: git push origin main
+          echo "$(date) - Random Commit Executed" >> logs/random-commit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: random-commit-logs
+          path: logs/
+

@@ -2,7 +2,7 @@ name: CI Camouflage
 
 on:
   schedule:
-    - cron: "0 */12 * * *"
+    - cron: "0 */12 * * *"   # Runs every 12 hours
   workflow_dispatch:
 
 jobs:
@@ -24,10 +24,10 @@ jobs:
           echo "✅ All tests passed successfully!"
 
       - name: Archive Logs
+        shell: bash
         run: |
           mkdir logs
           echo "$(date) - CI Build Logs for ${{ matrix.os }}" >> logs/build-${{ matrix.os }}.log
-        shell: bash
 
       - name: Upload Logs
         uses: actions/upload-artifact@v3

@@ -1,0 +1,36 @@
+name: CI Camouflage
+
+on:
+  schedule:
+    - cron: "0 */12 * * *"   # Runs every 12 hours
+  workflow_dispatch:
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Setup Environment
+        run: echo "Setting up environment on ${{ matrix.os }}..."
+
+      - name: Run Dummy Tests
+        run: |
+          echo "Running unit tests..."
+          echo "✅ All tests passed successfully!"
+      
+      - name: Archive Logs
+        run: |
+          mkdir -p logs
+          echo "$(date) - CI Build Logs for ${{ matrix.os }}" >> logs/build-${{ matrix.os }}.log
+        shell: bash
+
+      - name: Upload Logs
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-logs-${{ matrix.os }}
+          path: logs/

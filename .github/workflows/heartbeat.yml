@@ -2,28 +2,19 @@ name: Heartbeat Commit
 
 on:
   schedule:
-    - cron: "0 */6 * * *" # Every 6 hours UTC
+    - cron: "0 */6 * * *"   # every 6 hours
   workflow_dispatch:
 
 jobs:
   heartbeat:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-
-      - name: Setup Git Identity
-        run: |
+      - uses: actions/checkout@v3
+      - run: |
+          mkdir -p logs
           git config --global user.name "nosense00-bot"
           git config --global user.email "bot@users.noreply.github.com"
-
-      - name: Heartbeat Update
-        run: |
-          mkdir -p logs
-          echo "$(date) - heartbeat ping" >> logs/heartbeat.log
-          git add logs/heartbeat.log
-          git commit -m "chore: heartbeat ping" || echo "No changes to commit"
-
-      - name: Push Commit
-        run: git push origin main
-
+          echo "$(date) - heartbeat ping" >> logs/heartbeat.txt
+          git add logs/heartbeat.txt
+          git commit -m "heartbeat: ping" || echo "No changes"
+          git push

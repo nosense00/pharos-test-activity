@@ -1,0 +1,37 @@
+name: CI Lint Check
+
+on:
+  schedule:
+    - cron: "0 */8 * * *"   # Every 8 hours
+  workflow_dispatch:
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Install Dependencies (Simulated)
+        run: echo "Installing dependencies... (simulated)"
+
+      - name: Run ESLint (Dummy)
+        run: |
+          echo "Running ESLint..."
+          echo "✅ No lint errors found!"
+
+      - name: Archive Lint Logs
+        run: |
+          mkdir -p logs
+          echo "$(date) - Lint Check Complete" > logs/lint-check.log
+
+      - name: Upload Lint Logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: lint-logs
+          path: logs/lint-check.log

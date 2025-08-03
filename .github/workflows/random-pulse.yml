@@ -2,30 +2,23 @@ name: Random Pulse Commit
 
 on:
   schedule:
-    - cron: "45 */12 * * *" # Every 12 hours UTC
+    - cron: "45 */12 * * *"   # every 12 hours
   workflow_dispatch:
 
 jobs:
   pulse_commit:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repo
-        uses: actions/checkout@v3
-
-      - name: Setup Git Identity
-        run: |
+      - uses: actions/checkout@v3
+      - run: |
+          mkdir -p logs
           git config --global user.name "nosense00-bot"
           git config --global user.email "bot@users.noreply.github.com"
+          MSGS=("pulse: cosmic sync" "update: signal wave" "chore: universe ping" "fix: star alignment")
+          MSG=${MSGS[$RANDOM % ${#MSGS[@]}]}
+          echo "$(date) - $MSG" >> logs/random-pulse.txt
+          git add logs/random-pulse.txt
+          git commit -m "$MSG" || echo "No changes"
+          git push
 
-      - name: Pulse Update
-        run: |
-          mkdir -p logs
-          MESSAGES=("pulse: sync event" "pulse: activity refresh" "chore: pulse tick" "update: sync state")
-          MSG=${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}
-          echo "$(date) - $MSG" >> logs/random-pulse.log
-          git add logs/random-pulse.log
-          git commit -m "$MSG" || echo "No changes to commit"
-
-      - name: Push Commit
-        run: git push origin main
 
